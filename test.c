@@ -1,27 +1,48 @@
+#pragma warning(disable : 4996)
+
 #include "spymem.h"
+#include "lists.h"
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
+#include <time.h>
+#ifdef _WIN32
+	#include <windows.h>
+#else
+	#include <unistd.h>
+#endif
+
+
+#ifdef _WIN32
+	#define sleep Sleep
+#endif
+
+#define debug(...) {\
+	fprintf(stderr, __VA_ARGS__);\
+	fflush(stderr);\
+}
+
+
+extern List* SP_heap;
 
 int main() {
-	const List * list = sgetmain();
-	
-	void * f = smalloc(5);
-	printf("\nf=smalloc(5).\nlength: %lu\n", list->length);
-	
-	printf("%s\n", printlist(list));
-	
-	void * fr = smalloc(3);
-	printf("fr=smalloc(3).\nlength: %lu\n", list->length);
-	
-	printf("%s\n", printlist(list));
-	
+	SP_start();
+	debug("%s\n", printlist(SP_heap, 50));
+	char* f = (char*)smalloc(5);
+	strcpy(f, "test");
+	debug("\nf=smalloc(5).\n");
+	debug("%s\n", printlist(SP_heap, 50));
+	void* fr = smalloc(3);
+	debug("fr=smalloc(3).\n");
+	debug("%s\n", printlist(SP_heap, 50));
 	sfree(fr);
-	
-	printf("sfree(fr).\nlength: %lu\n", list->length);
-	
+	debug("sfree(fr).\n");
+	debug("%s\n", printlist(SP_heap, 50));
 	scalloc(2, 1);
-	
+	debug("scalloc(2, 1).\n");
+	debug("%s\n", printlist(SP_heap, 50));
 	f = srealloc(f, 6);
-	
-	printf("%s\n", printlist(list));
+	debug("f=srealloc(f, 6).\n");
+	debug("%s\n", printlist(SP_heap, 50));
+	debug("%s\n", SP_printreall());
 }

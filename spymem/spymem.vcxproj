@@ -25,9 +25,8 @@
     <ClInclude Include="spymem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\..\Documents\Visual Studio 2017\Libs\lists\lists\lists.vcxproj">
+    <ProjectReference Include="..\..\lists\lists\lists.vcxproj">
       <Project>{74fbace0-d1db-4667-b139-62572188af03}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -103,7 +102,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>true</ShowIncludes>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeaderFile>lists.h</PrecompiledHeaderFile>
@@ -113,7 +112,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
@@ -129,7 +128,7 @@
       <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>true</ShowIncludes>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeaderFile>lists.h</PrecompiledHeaderFile>
@@ -139,7 +138,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
@@ -157,7 +156,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>true</ShowIncludes>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeaderFile>lists.h</PrecompiledHeaderFile>
@@ -169,7 +168,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
@@ -187,7 +186,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>true</ShowIncludes>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
       <PrecompiledHeaderFile>lists.h</PrecompiledHeaderFile>
@@ -199,7 +198,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Documents\Visual Studio 2017\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\CodeDragon\Desktop\workspace\C\Libs\lists\lists;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/DDEBUG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>

@@ -31,7 +31,7 @@ int main() {
 	char* f = (char*)smalloc(5);
 	strcpy(f, "test");
 	debug("\nf=smalloc(5).\n");
-	debug("%s\n", SP_printheap(50));
+	debug("%s\n", SP_printheap(-1));
 	void* fr = smalloc(3);
 	debug("fr=smalloc(3).\n");
 	debug("%s\n", SP_printheap(50));

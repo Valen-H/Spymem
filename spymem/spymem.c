@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <limits.h>
 #include <time.h>
 #include "spymem.h"
 #include "lists.h"
@@ -31,8 +32,8 @@ static size_t hexsize(const void* const ptr) {
 	return i; /* EXCLUDES \0 */
 }
 
-static char* hexify(void* str, size_t delim) {
-	size_t size = delim ? delim : (strlen(str) + 1);
+static char* hexify(void* str, signed long delim) {
+	size_t size = delim >= 0 ? delim : (strlen(str) + 1);
 	char* ret = (char*) calloc(size * 4 + 1, sizeof(char)),
 		*acc = (char*) calloc(4, sizeof(char));
 
@@ -82,18 +83,17 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 	
 	extern void* SP_realloc(const void* ptr, size_t size, List* list, List* real) {
 		signed long idx = customscan(scanptr, ptr, list);
+		SP_Alloc* targ = ((SP_Alloc*) list->data[idx]);
 		SP_Reall* reall = (SP_Reall*) calloc(1, sizeof(SP_Reall));  /* LEAK NECESSARY FOR PRINT! */
-		reall->from = ((SP_Alloc*) list->data[idx])->ptr;
+		reall->from = targ->ptr;
 		reall->frmlen = list->lengths[idx];
+		reall->frmtimestamp = targ->timestamp;
 		void* pt = realloc(ptr, size);
-		((SP_Alloc*) list->data[idx])->ptr = pt;
-		reall->timestamp = ((SP_Alloc*) list->data[idx])->timestamp = clock();
-		list->lengths[idx] = size;
-		list->ids[idx] = 2;
-		reall->to = ((SP_Alloc*) list->data[idx])->ptr;
-		reall->tolen = list->lengths[idx];
+		reall->to = targ->ptr = pt;
+		reall->tolen = list->lengths[idx] = size;
+		reall->totimestamp = targ->timestamp = clock();
 		placelist(real->length, real, size, reall);
-		/*placelist(idx, list, size, pt);*/
+		list->ids[idx] = 2;
 		
 		return pt;
 	}
@@ -133,16 +133,17 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 
 #endif
 
-extern char* SP_printheap(size_t xpose) {
+extern char* SP_printheap(signed long xpose) {
 	SP_Alloc tm;
-	size_t cnt = intsize(SP_heap->length) + hexsize(SP_heap) * 2 + intsize(SIZE_MAX) * 3 + 15 + xpose,
-		cnt2 = (intsize(SP_heap->length) + hexsize(SP_heap) * 2 + intsize(SIZE_MAX) * 2 + 14 + xpose) * SP_heap->length + 1;
+	size_t cnt = intsize(SP_heap->length) + hexsize(SP_heap) + intsize(SIZE_MAX) * 3 + 17 + xpose,
+		cnt2 = (intsize(SP_heap->length) + hexsize(SP_heap) + intsize(SIZE_MAX) * 3 + 16 + xpose) * SP_heap->length + 1;
 	char* tmp = (char*) calloc(cnt, sizeof(char)),
 		* ret = (char*) calloc(cnt2, sizeof(char));
 
 	for (register size_t i = 0; i < SP_heap->length; i++) {
 		tm = *((SP_Alloc*) SP_heap->data[i]);
-		snprintf(tmp, cnt, "%zu,%ld: %p (%zu)[%lu] - %s\n", i, SP_heap->ids[i], tm.ptr, SP_heap->lengths[i], tm.timestamp, hexify(tm.ptr, SP_heap->lengths[i]));
+		snprintf(tmp, cnt - 1, "%zu,%ld: %p (%zu)[%lu] - %s", i, SP_heap->ids[i], tm.ptr, SP_heap->lengths[i], tm.timestamp, hexify(tm.ptr, SP_heap->lengths[i]));
+		strcat(tmp, "\n");
 
 		if (i) {
 			strcat(ret, tmp);
@@ -157,15 +158,15 @@ extern char* SP_printheap(size_t xpose) {
 }
 
 extern char* SP_printreall() {
-	size_t cnt = intsize(SP_realls->length) + hexsize(SP_realls) * 2 + intsize(SIZE_MAX) * 2 + 17,
-		cnt2 = (intsize(SP_realls->length) + hexsize(SP_realls) * 2 + intsize(SIZE_MAX) * 2 + 16) * SP_realls->length + 1;
+	size_t cnt = intsize(SP_realls->length) + hexsize(SP_realls) * 2 + intsize(SIZE_MAX) * 4 + 25,
+		cnt2 = (intsize(SP_realls->length) + hexsize(SP_realls) * 2 + intsize(SIZE_MAX) * 4 + 24) * SP_realls->length + 1;
 	char* tmp = (char*) calloc(cnt, sizeof(char)),
 		* ret = (char*) calloc(cnt2, sizeof(char));
 	SP_Reall tm;
 	
 	for (register size_t i = 0; i < SP_realls->length; i++) {
 		tm = *((SP_Reall*) SP_realls->data[i]);
-		snprintf(tmp, cnt, "%zu, %p (%zu) -> %p (%zu)\n", i, tm.from, tm.frmlen, tm.to, tm.tolen);
+		snprintf(tmp, cnt, "%zu, %p (%zu)[%lu] -> %p (%zu)[%lu]\n", i, tm.from, tm.frmlen, tm.frmtimestamp, tm.to, tm.tolen, tm.totimestamp);
 		
 		if (i) {
 			strcat(ret, tmp);

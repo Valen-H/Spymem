@@ -41,7 +41,8 @@
 			* to;
 		size_t frmlen,
 			tolen;
-		clock_t timestamp;
+		clock_t frmtimestamp,
+			totimestamp;
 	} SP_Reall;
 
 	typedef struct SP_Alloc {
@@ -55,4 +56,4 @@
 	} SP_Free;
 
 	extern char * SP_printreall(void);
-	extern char * SP_printheap(size_t xpose);
+	extern char * SP_printheap(signed long xpose);

@@ -16,33 +16,35 @@ ifeq ($(OS), Windows_NT)
 	END=dll
 	PRE=lib
 	ENDA=lib
+	ENDO=exe
 else
 	LIB=$(PREFIX)/lib
 	END=so
-	PRED=lib
+	PRE=lib
 	ENDA=a
+	ENDO=o
 endif
 INC=$(LIB)/../include
 BIN=$(LIB)/../bin
 
 default: all
-all: $(targ).o $(PRE)$(targ).$(END) $(PRE)$(targ).$(ENDA) $(TEST).o lib$(targ).$(END).$(ENDA) fix install pack #$(targ)
+all: $(targ).$(ENDO) $(PRE)$(targ).$(END) $(PRE)$(targ).$(ENDA) $(TEST).$(ENDO) lib$(targ).$(END).$(ENDA) fix install pack #$(targ)
 .PHONY: clean install fix firstinst all default pack
 
-$(targ).o: $(targ).c $(DEPS)
+$(targ).$(ENDO): $(targ).c $(DEPS)
 	$(CC) $(CFLAGS) -c $(targ).c -o $@
 
-$(PRE)$(targ).$(END): $(targ).o
+$(PRE)$(targ).$(END): $(targ).$(ENDO)
 	$(CC) $(CFLAGS) -shared -o $@ $^ $(LINKS)
 
-$(PRE)$(targ).$(ENDA): $(targ).o
+$(PRE)$(targ).$(ENDA): $(targ).$(ENDO)
 	$(AR) $(ARFLAGS) $@ $^
 	$(RANLIB) $@
 
-$(TEST).o: $(TEST).c $(targ).o
+$(TEST).$(ENDO): $(TEST).c $(targ).$(ENDO)
 	$(CC) $(CFLAGS) $^ -o $@ $(TSTFLAGS) $(LINKS)
 
-#$(targ): $(BINR) $(targ).o
+#$(targ): $(BINR) $(targ).$(ENDO)
 #	$(CC) $(CFLAGS) $(BINR) -o $@ -L./ -l$(targ) $(LINKS)
 
 
@@ -64,7 +66,7 @@ clean: *
 	rm *.dll* -f &
 	rm *.a -f &
 	rm *.stackdump -f &
-	rm *.bak -f
+	rm *.bak -rf
 
 fix: FORCE
 	chmod 775 *

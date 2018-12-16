@@ -22,7 +22,7 @@
 	extern void * SP_malloc(size_t size, List * list);
 	extern void * SP_realloc(const void * ptr, size_t size, List* list, List* real);
 	extern void * SP_calloc(size_t nitems, size_t size, List * list);
-	extern void SP_free(const void * ptr, List * list);
+	extern void SP_free(const void * ptr, List * list, List * frees);
 	extern void * smalloc(size_t size);
 	extern void * srealloc(const void * ptr, size_t size);
 	extern void * scalloc(size_t nitems, size_t size);
@@ -38,9 +38,11 @@
 	
 	typedef struct SP_Reall {
 		const void * from,
-			* to;
+			 * to;
 		size_t frmlen,
-			tolen;
+			tolen,
+			id,
+			toid;
 		clock_t frmtimestamp,
 			totimestamp;
 	} SP_Reall;
@@ -48,12 +50,19 @@
 	typedef struct SP_Alloc {
 		const void * ptr;
 		clock_t timestamp;
+		size_t id;
 	} SP_Alloc;
 
 	typedef struct SP_Free {
-		const SP_Alloc * make;
-		clock_t timestamp;
+		const void * ptr;
+		clock_t frmtimestamp,
+			timestamp;
+		size_t id;
 	} SP_Free;
 
-	extern char * SP_printreall(void);
-	extern char * SP_printheap(signed long xpose);
+	extern char * SP_printreall(const List * reall);
+	extern char * SP_printheap(const List * heap, signed long xpose);
+	extern char * SP_printfree(const List * frees);
+	extern char * sprintreall(void);
+	extern char * sprintheap(signed long xpose);
+	extern char * sprintfree(void);

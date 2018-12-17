@@ -1,9 +1,3 @@
-/**
- * IMPLEMENT SP_printfree
- * SP_printXXX , sprintXXX  <- custom list, default list respectively, REARRANGE
- */
-
-
 #pragma warning(disable : 4996)
 
 #include <stdlib.h>
@@ -26,21 +20,21 @@ static size_t idcnt = 0;
 static size_t hexsize(const void* const ptr) {
 	char* ret = (char*) calloc(MAXPTRADDRSIZE, sizeof(char));
 	register size_t i;
-
+	
 	snprintf(ret, MAXPTRADDRSIZE, "%p", ptr);
 	i = strlen(ret);
 	free(ret);
-
+	
 	return i; /* EXCLUDES \0 */
 }
 
-static char* hexify(void* str, signed long delim) {
+static char* hexify(const void* str, signed long delim) {
 	size_t size = delim >= 0 ? delim : (strlen(str) + 1);
 	char* ret = (char*) calloc(size * 4 + 1, sizeof(char)),
 		*acc = (char*) calloc(4, sizeof(char));
-
+	
 	memset(ret, 0, size * 3 + 1);
-
+	
 	for (register size_t i = 0; i < size; i++) {
 		snprintf(acc, 4, "%02X ", ((unsigned char*) str)[i]);
 		if (i) {
@@ -49,20 +43,20 @@ static char* hexify(void* str, signed long delim) {
 			strcpy(ret, acc);
 		}
 	}
-
+	
 	free(acc);
-
+	
 	return ret;
 }
 
 static size_t intsize(register long value) {
 	register size_t l = !value;
-
+	
 	while (value >= 1) {
 		l++;
 		value /= 10;
 	}
-
+	
 	return l;
 }
 
@@ -84,9 +78,10 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 		return ptr;
 	}
 	
-	extern void* SP_realloc(const void* ptr, size_t size, List* list, List* real) {
+	extern void* SP_realloc(void* ptr, size_t size, List* list, List* real) {
 		signed long idx = customscan(scanptr, ptr, list);
 		void* pt;
+		
 		if (idx >= 0) {
 			SP_Alloc* targ = ((SP_Alloc*) list->data[idx]);
 			SP_Reall* reall = (SP_Reall*) calloc(1, sizeof(SP_Reall));  /* LEAK NECESSARY FOR PRINT! */
@@ -123,12 +118,13 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 		alloc->id = idcnt++;
 		placelist(list->length, list, nitems * size, alloc);
 		list->ids[list->length - 1] = 1;
-
+		
 		return ptr;
 	}
 	
-	extern void SP_free(const void* ptr, List* list, List* frees) {
+	extern void SP_free(void* ptr, List* list, List* frees) {
 		signed long idx = customscan(scanptr, ptr, list);
+		
 		if (idx >= 0) {
 			SP_Free* fr = (SP_Free*) calloc(1, sizeof(SP_Free));  /* LEAK NECESSARY FOR PRINT! */
 			SP_Alloc* targ = ((SP_Alloc*) list->data[idx]);
@@ -140,6 +136,7 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 			frees->ids[frees->length - 1] = list->ids[idx];
 			rmlist(idx, list);
 		}
+		
 		free(ptr);
 	}
 	
@@ -147,7 +144,7 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 		return SP_malloc(size, SP_heap);
 	}
 
-	extern void* srealloc(const void* ptr, size_t size) {
+	extern void* srealloc(void* ptr, size_t size) {
 		return SP_realloc(ptr, size, SP_heap, SP_realls);
 	}
 
@@ -155,37 +152,37 @@ static bool scanptr(const void * curptr, const void * tarptr) {
 		return SP_calloc(nitems, size, SP_heap);
 	}
 	
-	extern void sfree(const void* ptr) {
+	extern void sfree(void* ptr) {
 		SP_free(ptr, SP_heap, SP_frees);
 	}
 
 #endif
 
-extern char* SP_printheap(const List * heap, signed long xpose) {
+extern char* SP_printheap(const List* heap, signed long xpose) {
 	SP_Alloc tm;
 	size_t cnt = intsize(heap->length) + hexsize(heap) + intsize(SIZE_MAX) * 4 + 20 + xpose,
 		cnt2 = (intsize(heap->length) + hexsize(heap) + intsize(SIZE_MAX) * 4 + 19 + xpose) * heap->length + 1;
 	char* tmp = (char*) calloc(cnt, sizeof(char)),
 		* ret = (char*) calloc(cnt2, sizeof(char));
-
+	
 	for (register size_t i = 0; i < heap->length; i++) {
 		tm = *((SP_Alloc*) heap->data[i]);
 		snprintf(tmp, cnt - 1, "%zu,%ld,%zu: %p (%zu)[%lu] - %s", i, heap->ids[i], tm.id, tm.ptr, heap->lengths[i], tm.timestamp, hexify(tm.ptr, heap->lengths[i]));
 		strcat(tmp, "\n");
-
+		
 		if (i) {
 			strcat(ret, tmp);
 		} else {
 			strcpy(ret, tmp);
 		}
 	}
-
+	
 	free(tmp);
-
+	
 	return ret;
 }
 
-extern char* SP_printreall(const List * realls) {
+extern char* SP_printreall(const List* realls) {
 	SP_Reall tm;
 	size_t cnt = intsize(realls->length) + hexsize(realls) * 2 + intsize(SIZE_MAX) * 7 + 31,
 		cnt2 = (intsize(realls->length) + hexsize(realls) * 2 + intsize(SIZE_MAX) * 7 + 30) * realls->length + 1;
@@ -208,7 +205,7 @@ extern char* SP_printreall(const List * realls) {
 	return ret;
 }
 
-extern char* SP_printfree(const List * frees) {
+extern char* SP_printfree(const List* frees) {
 	SP_Free tm;
 	size_t cnt = intsize(frees->length) + hexsize(frees) + intsize(SIZE_MAX) * 4 + 20,
 		cnt2 = (intsize(frees->length) + hexsize(frees) + intsize(SIZE_MAX) * 4 + 19) * frees->length + 1;

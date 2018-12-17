@@ -20,13 +20,13 @@
 #else
 	
 	extern void * SP_malloc(size_t size, List * list);
-	extern void * SP_realloc(const void * ptr, size_t size, List* list, List* real);
+	extern void * SP_realloc(void * ptr, size_t size, List* list, List* real);
 	extern void * SP_calloc(size_t nitems, size_t size, List * list);
-	extern void SP_free(const void * ptr, List * list, List * frees);
+	extern void SP_free(void * ptr, List * list, List * frees);
 	extern void * smalloc(size_t size);
-	extern void * srealloc(const void * ptr, size_t size);
+	extern void * srealloc(void * ptr, size_t size);
 	extern void * scalloc(size_t nitems, size_t size);
-	extern void sfree(const void * ptr);
+	extern void sfree(void * ptr);
 	
 #endif
 

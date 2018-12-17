@@ -32,7 +32,7 @@ all: $(targ).$(ENDO) $(PRE)$(targ).$(END) $(PRE)$(targ).$(ENDA) $(TEST).$(ENDO) 
 .PHONY: clean install fix firstinst all default pack
 
 $(targ).$(ENDO): $(targ).c $(DEPS)
-	$(CC) $(CFLAGS) -c $(targ).c -o $@ $(LINKS)
+	$(CC) $(CFLAGS) -c $(targ).c -o $@ $(INC)
 
 $(PRE)$(targ).$(END): $(targ).$(ENDO)
 	$(CC) $(CFLAGS) -shared -o $@ $^ $(LINKS)

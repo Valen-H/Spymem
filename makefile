@@ -3,12 +3,11 @@
 
 CC=gcc
 RANLIB=ranlib
-CFLAGS=-fPIE
+CFLAGS=-fPIC -DDEBUG
 ARFLAGS=rcs
 targ=$(shell basename $$PWD)
 DEPS=$(targ).h
-LINK=-L. -I. -l:liblists.lib
-TSTFLAGS=-ggdb -DDEBUG
+TSTFLAGS=-ggdb
 TEST=test
 BINR=bin.c
 ifeq ($(OS), Windows_NT)
@@ -24,15 +23,16 @@ else
 	ENDA=a
 	ENDO=o
 endif
-INC=$(LIB)/../include
-BIN=$(LIB)/../bin
+INC=$(PREFIX)/include
+BIN=$(PREFIX)/bin
+LINKS=-llists
 
 default: all
-all: $(targ).$(ENDO) $(PRE)$(targ).$(END) $(PRE)$(targ).$(ENDA) $(TEST).$(ENDO) lib$(targ).$(END).$(ENDA) fix install pack #$(targ)
+all: $(targ).$(ENDO) $(PRE)$(targ).$(END) $(PRE)$(targ).$(ENDA) $(TEST).$(ENDO) fix install pack #$(targ)
 .PHONY: clean install fix firstinst all default pack
 
 $(targ).$(ENDO): $(targ).c $(DEPS)
-	$(CC) $(CFLAGS) -c $(targ).c -o $@
+	$(CC) $(CFLAGS) -c $(targ).c -o $@ $(LINKS)
 
 $(PRE)$(targ).$(END): $(targ).$(ENDO)
 	$(CC) $(CFLAGS) -shared -o $@ $^ $(LINKS)
@@ -48,14 +48,14 @@ $(TEST).$(ENDO): $(TEST).c $(targ).$(ENDO)
 #	$(CC) $(CFLAGS) $(BINR) -o $@ -L./ -l$(targ) $(LINKS)
 
 
-lib$(targ).$(END).$(ENDA): $(PRE)$(targ).$(END)
+$(PRE)$(targ).$(END).$(ENDA): $(PRE)$(targ).$(END)
 	echo EXPORTS > $(targ).def
 	nm $(PRE)$(targ).$(END) | grep ' T _' | sed 's/.* T _//' >> $(targ).def
-	dlltool --def $(targ).def --dllname $(targ).$(END) --output-lib lib$(targ).$(END).$(ENDA)
-	$(RANLIB) lib$(targ).$(ENDA)
+	dlltool --def $(targ).def --dllname $(targ).$(END) --output-lib $(PRE)$(targ).$(END).$(ENDA)
+	$(RANLIB) $(PRE)$(targ).$(ENDA)
 
 install: $(PRE)$(targ).$(END)
-	install -m 755 lib$(targ).$(END) $(LIB)
+	install -m 755 $(PRE)$(targ).$(END) $(LIB)
 	install -m 755 $(targ).h $(INC)
 	#install -m 755 $(targ) $(BIN)
 

@@ -2,22 +2,22 @@
 
 #define TKN(t) #t
 
+#include <stddef.h>
+#include <time.h>
+#include "lists.h"
+
 #ifndef DEBUG
 	
 	#define smalloc(size) malloc(size)
 	#define sfree(ptr) free(ptr)
-	#define sSP_Realloc(ptr, size) SP_Realloc(ptr, size)
+	#define srealloc(ptr, size) SP_realloc(ptr, size)
 	#define scalloc(nitems, size) calloc(nitems, size)
 	#define SP_malloc(size, list) malloc(size)
 	#define SP_free(ptr, list) free(ptr)
-	#define SP_Realloc(ptr, size, list) SP_Realloc(ptrs, size)
+	#define SP_realloc(ptr, size, list) SP_realloc(ptrs, size)
 	#define SP_calloc(nitems, size, list) calloc(nitems, size)
 	
 #else
-	
-	#include <stddef.h>
-	#include <time.h>
-	#include "lists.h"
 	
 	extern void * SP_malloc(size_t size, List * list);
 	extern void * SP_realloc(const void * ptr, size_t size, List* list, List* real);
